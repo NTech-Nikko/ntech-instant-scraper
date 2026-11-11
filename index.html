@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827"><meta name="description" content="NTech Instant Scraper business lead workspace"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./ntech-icon-192.png"><title>NTech Instant Scraper</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#172438;--line:#26364c;--text:#edf4ff;--muted:#9aabc2;--cyan:#32d5e6;--blue:#5688ff;--good:#36c995;--danger:#ff7373}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0a1120,#101d30 60%,#0b1220);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1120px;margin:auto;padding:20px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--cyan),var(--blue));display:grid;place-items:center;color:#07111e;font-weight:900;font-size:21px}
+h1{font-size:22px;margin:0;letter-spacing:.3px}.sub{color:var(--muted);font-size:13px}.pill{border:1px solid #28566a;color:#82e8f0;border-radius:99px;padding:6px 11px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:rgba(18,29,46,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 32px #0002}.wide{grid-column:1/-1}
+h2{font-size:17px;margin:0 0 8px}.muted{color:var(--muted);font-size:13px;margin:0 0 14px}
+label{display:block;color:#cbd8e9;font-size:13px;margin:12px 0 6px}input,textarea,select{width:100%;background:#0b1525;color:var(--text);border:1px solid #30435c;border-radius:10px;padding:12px;font:inherit;min-height:46px}textarea{min-height:100px;resize:vertical}
+button,.btn{border:0;border-radius:10px;padding:12px 15px;font-weight:700;font-size:14px;cursor:pointer;background:linear-gradient(100deg,var(--cyan),#75a8ff);color:#071322}
+button.secondary{background:#22334a;color:#dceaff;border:1px solid #38516f}button.danger{background:#452631;color:#ffc1c1;border:1px solid #70404c}button:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.status{margin-top:12px;color:var(--muted);font-size:13px;min-height:20px}.status.good{color:var(--good)}.status.bad{color:var(--danger)}
+.steps{padding-left:20px;color:#c6d5e8;font-size:13px}.steps li{margin:7px 0}.bookmarklet{display:inline-block;background:#24364d;color:#aeeef4;padding:9px 12px;border-radius:9px;text-decoration:none;font-weight:700;word-break:break-all}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:12px}table{border-collapse:collapse;width:100%;min-width:760px}th,td{padding:9px 10px;border-bottom:1px solid #26364c;text-align:left;font-size:13px}th{color:#9edee8;background:#15253a;position:sticky;top:0}td input{min-width:125px;padding:8px;min-height:38px;font-size:13px}.count{color:var(--muted);font-size:13px}
+.notice{background:#192b3e;border-left:3px solid var(--cyan);padding:11px 13px;border-radius:8px;color:#c7d8ec;font-size:13px;margin-top:12px}
+@media(max-width:760px){.wrap{padding:14px}.grid{grid-template-columns:1fr}.wide{grid-column:auto}h1{font-size:19px}.card{padding:15px}.top{align-items:flex-start}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div class="brand"><div class="logo">N</div><div><h1>NTech Instant Scraper</h1><div class="sub">Business lead extraction · Tablet edition · v1.0</div></div></div><span class="pill" id="networkStatus">CHECKING CONNECTION…</span></header>
+<div class="grid">
+<section class="card">
+<h2>01 · Current Page Scraper</h2><p class="muted">Extract business details from the webpage currently open in Chrome using the NTech bookmarklet.</p>
+<ol class="steps"><li>Drag or save the bookmarklet below to your Chrome bookmarks (see setup guide for Android).</li><li>Open a public business website and run the bookmarklet.</li><li>Copy the displayed JSON, then paste it below.</li></ol>
+<a id="bookmarklet" class="bookmarklet" href="#">NTech · Capture This Page</a>
+<label for="capture">Paste captured page data (JSON)</label><textarea id="capture" placeholder='Paste the JSON copied from the bookmarklet here...'></textarea>
+<div class="actions"><button id="importCapture">Import captured data</button><button class="secondary" id="clearCapture">Clear</button></div>
+<div id="captureStatus" class="status" aria-live="polite"></div>
+</section>
+<section class="card">
+<h2>02 · URL Scraper</h2><p class="muted">Ask your Apps Script backend to fetch a publicly accessible business page and extract likely contact details.</p>
+<label for="pageUrl">Business website URL</label><input id="pageUrl" type="url" placeholder="https://example.com">
+<div class="actions"><button id="scrapeUrl">Scrape URL</button></div>
+<div id="urlStatus" class="status" aria-live="polite"></div>
+<div class="notice">URL extraction is best-effort. Some sites block automated requests, render content with JavaScript, or require sign-in. This tool does not bypass those restrictions.</div>
+</section>
+<section class="card">
+<h2>03 · Google Sheets connection</h2><p class="muted">Connect your own Apps Script web app. Your Google account controls the destination spreadsheet.</p>
+<label for="endpoint">Apps Script Web App URL</label><input id="endpoint" type="url" placeholder="https://script.google.com/macros/s/…/exec">
+<label for="sheetName">Sheet tab name</label><input id="sheetName" value="Leads" placeholder="Leads">
+<div class="actions"><button id="saveSettings" class="secondary">Save connection on this device</button><button id="testConnection" class="secondary">Test connection</button></div>
+<div id="sheetStatus" class="status" aria-live="polite"></div>
+</section>
+<section class="card">
+<h2>04 · Export</h2><p class="muted">Review your records below, then append them to Google Sheets or download a CSV backup.</p>
+<div class="count" id="recordCount">0 records ready</div>
+<div class="actions"><button id="sendSheets">Send to Google Sheets</button><button id="downloadCsv" class="secondary">Download CSV</button><button id="clearRows" class="danger">Clear all records</button></div>
+<div id="exportStatus" class="status" aria-live="polite"></div>
+<div class="notice">Only submit business contact information you are authorized to collect and use. Follow each website's terms, privacy rules, and applicable anti-spam laws.</div>
+</section>
+<section class="card wide">
+<h2>05 · Data preview</h2><p class="muted">Tap any cell to correct it before exporting. Duplicate website/email combinations are skipped on import.</p>
+<div class="tablewrap"><table><thead><tr><th>Business name</th><th>Email address</th><th>Phone number</th><th>Website URL</th><th>Business address</th><th></th></tr></thead><tbody id="rows"><tr><td colspan="6" class="muted">No records yet. Capture a page or scrape a URL to begin.</td></tr></tbody></table></div>
+</section>
+</div></main>
+<script>
+const FIELDS=["businessName","email","phone","website","address"];
+let records=[];
+const $=id=>document.getElementById(id);
+const status=(id,msg,type="")=>{$(id).textContent=msg;$(id).className="status "+type};
+const clean=s=>(s||"").toString().replace(/\s+/g," ").trim();
+const validUrl=s=>{try{let u=new URL(s);return ["http:","https:"].includes(u.protocol)}catch(e){return false}};
+function normalize(x){return {businessName:clean(x.businessName||x.name||x.title),email:clean(x.email),phone:clean(x.phone),website:clean(x.website||x.url),address:clean(x.address)}}
+function addRecords(items){let added=0;for(const raw of items){const r=normalize(raw);if(!r.businessName&&!r.email&&!r.phone&&!r.website&&!r.address)continue;
+const key=(r.email+"|"+r.website).toLowerCase();if(records.some(a=>(a.email+"|"+a.website).toLowerCase()===key))continue;records.push(r);added++}render();return added}
+function render(){localStorage.setItem("ntech_records",JSON.stringify(records));const body=$("rows");$("recordCount").textContent=records.length+" record"+(records.length===1?"":"s")+" ready";
+if(!records.length){body.innerHTML='<tr><td colspan="6" class="muted">No records yet. Capture a page or scrape a URL to begin.</td></tr>';return}
+body.innerHTML="";records.forEach((r,i)=>{const tr=document.createElement("tr");FIELDS.forEach(f=>{const td=document.createElement("td"),inp=document.createElement("input");inp.value=r[f];inp.setAttribute("aria-label",f);inp.addEventListener("input",()=>{records[i][f]=inp.value;localStorage.setItem("ntech_records",JSON.stringify(records))});td.append(inp);tr.append(td)});const td=document.createElement("td"),b=document.createElement("button");b.textContent="×";b.className="danger";b.title="Remove record";b.onclick=()=>{records.splice(i,1);render()};td.append(b);tr.append(td);body.append(tr)})}
+function jsonp(url){return new Promise((resolve,reject)=>{const cb="ntech_cb_"+Date.now()+"_"+Math.floor(Math.random()*1e6);const script=document.createElement("script");const timer=setTimeout(()=>{cleanup();reject(new Error("Request timed out. Check the Apps Script deployment and try again."))},30000);function cleanup(){clearTimeout(timer);delete window[cb];script.remove()}window[cb]=data=>{cleanup();resolve(data)};script.onerror=()=>{cleanup();reject(new Error("Could not reach Apps Script. Check the URL and deployment access."))};script.src=url+(url.includes("?")?"&":"?")+"callback="+cb;document.body.append(script)})}
+function endpoint(){const e=$("endpoint").value.trim();if(!e||!e.startsWith("https://script.google.com/"))throw new Error("Add your Apps Script Web App URL first.");return e}
+$("bookmarklet").href="javascript:(()=>{const t=document.body.innerText||'',emails=[...new Set(t.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/gi)||[])],phones=[...new Set(t.match(/(?:\\+?\\d[\\d().\\s-]{7,}\\d)/g)||[])];const m=(p)=>document.querySelector(p)?.content||'';const ld=[...document.querySelectorAll('script[type=\\"application/ld+json\\"]')].map(s=>{try{return JSON.parse(s.textContent)}catch(e){return null}}).filter(Boolean);const flat=Array.isArray(ld)?ld:ld;const find=(o,k)=>{if(!o||typeof o!=='object')return '';if(o[k])return typeof o[k]==='object'?(o[k].name||o[k].streetAddress||''):o[k];for(const v of Object.values(o)){const x=find(v,k);if(x)return x}return ''};const org=flat.find(x=>JSON.stringify(x).match(/Organization|LocalBusiness/i))||{};const a=document.querySelector('address')?.innerText||find(org,'streetAddress');const out={businessName:find(org,'name')||m('meta[property=\\"og:site_name\\"]')||document.title,email:emails[0]||'',phone:phones[0]||'',website:location.origin,address:a,sourceUrl:location.href};const s=JSON.stringify(out,null,2);if(navigator.clipboard?.writeText){navigator.clipboard.writeText(s).then(()=>alert('NTech captured this page. Paste the copied JSON into the NTech dashboard.')).catch(()=>prompt('Copy this captured data:',s))}else prompt('Copy this captured data:',s)})()";
+$("importCapture").onclick=()=>{try{const v=JSON.parse($("capture").value);const n=addRecords(Array.isArray(v)?v:[v]);status("captureStatus",n+" record(s) imported.","good")}catch(e){status("captureStatus","Invalid JSON. Copy the complete bookmarklet output and try again.","bad")}};
+$("clearCapture").onclick=()=>{$("capture").value="";status("captureStatus","")};
+$("scrapeUrl").onclick=async()=>{try{const u=$("pageUrl").value.trim();if(!validUrl(u))throw new Error("Enter a valid http or https URL.");status("urlStatus","Fetching page…");const q=new URL(endpoint());q.searchParams.set("action","scrape");q.searchParams.set("url",u);const result=await jsonp(q.toString());if(!result.ok)throw new Error(result.error||"Scrape failed.");const n=addRecords([result.record]);status("urlStatus",`Done. ${n} new record added. Review the preview below.`,"good")}catch(e){status("urlStatus",e.message,"bad")}};
+$("saveSettings").onclick=()=>{localStorage.setItem("ntech_endpoint",$("endpoint").value.trim());localStorage.setItem("ntech_sheet",$("sheetName").value.trim()||"Leads");status("sheetStatus","Connection settings saved on this device.","good")};
+$("testConnection").onclick=async()=>{try{const q=new URL(endpoint());q.searchParams.set("action","ping");const r=await jsonp(q.toString());if(!r.ok)throw new Error(r.error||"Connection test failed.");status("sheetStatus",r.message||"Connection successful.","good")}catch(e){status("sheetStatus",e.message,"bad")}};
+$("sendSheets").onclick=async()=>{try{if(!records.length)throw new Error("There are no records to export.");const e=endpoint();const q=new URL(e);q.searchParams.set("action","append");q.searchParams.set("sheet",$("sheetName").value.trim()||"Leads");q.searchParams.set("data",JSON.stringify(records));status("exportStatus","Sending records to Google Sheets…");const r=await jsonp(q.toString());if(!r.ok)throw new Error(r.error||"Export failed.");status("exportStatus",r.message||"Records sent to Google Sheets.","good")}catch(e){status("exportStatus",e.message,"bad")}};
+$("downloadCsv").onclick=()=>{if(!records.length){status("exportStatus","There are no records to export.","bad");return}const cols=["Business name","Email address","Phone number","Website URL","Business address"];const esc=v=>'"'+String(v||"").replace(/"/g,'""')+'"';const csv=[cols.map(esc).join(","),...records.map(r=>FIELDS.map(f=>esc(r[f])).join(","))].join("\r\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));a.download="ntech-business-leads.csv";a.click();URL.revokeObjectURL(a.href);status("exportStatus","CSV backup downloaded.","good")};
+$("clearRows").onclick=()=>{if(confirm("Remove all records from this session?")){records=[];render();status("exportStatus","All preview records cleared.")}};
+$("endpoint").value=localStorage.getItem("ntech_endpoint")||"";$("sheetName").value=localStorage.getItem("ntech_sheet")||"Leads";
+try{records=JSON.parse(localStorage.getItem("ntech_records")||"[]");if(!Array.isArray(records))records=[]}catch(e){records=[]}
+render();
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(e=>console.warn("NTech offline support could not be enabled",e)))}
+function showNetwork(){let el=document.getElementById("networkStatus");if(el)el.textContent=navigator.onLine?"ONLINE · Sync available":"OFFLINE · Saved workspace available";}
+window.addEventListener("online",showNetwork);window.addEventListener("offline",showNetwork);showNetwork();
+</script></body></html>

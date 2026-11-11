@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "NTech Instant Scraper",
+  "short_name": "NTech Scraper",
+  "description": "NTech business lead extraction workspace",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1220",
+  "theme_color": "#101827",
+  "icons": [
+    { "src": "./ntech-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./ntech-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
